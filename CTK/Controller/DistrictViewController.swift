@@ -9,7 +9,7 @@
 import UIKit
 import Moya
 
-class ObjectViewController: UIViewController {
+class DistrictViewController: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!
     private var provider = MoyaProvider<MainService>()
@@ -19,6 +19,7 @@ class ObjectViewController: UIViewController {
         setup()
         loadData()
     }
+    
     
     private func setup() {
         
@@ -35,7 +36,7 @@ class ObjectViewController: UIViewController {
         self.navigationController?.navigationBar.tintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
     }
     
-    private func loadData(){
+    private func loadData() {
         provider.request(.districts) { [weak self](result) in
             guard let strongSelf = self else {return}
             switch result{
@@ -56,7 +57,7 @@ class ObjectViewController: UIViewController {
     
 }
 
-extension ObjectViewController: UITableViewDelegate, UITableViewDataSource{
+extension DistrictViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return districts.count
     }
@@ -75,5 +76,9 @@ extension ObjectViewController: UITableViewDelegate, UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        guard let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "DistrictObjectViewController") as? DistrictObjectViewController else {return}
+        vc.type = .district
+        vc.id = districts[indexPath.row].id
+        self.navigationController?.pushViewController(vc, animated: true)
     }
 }
